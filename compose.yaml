@@ -1,0 +1,6 @@
+﻿services:
+  painel-conversas:
+    image: painel-conversas
+    build:
+      context: .
+      dockerfile: Dockerfile
