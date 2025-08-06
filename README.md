@@ -32,25 +32,25 @@ Um sistema simples feito em **ASP.NET Core MVC** para **visualizar o conteúdo d
 
 ## 🛠 Como executar
 
-1. Clone o repositório:
+### 1. Clone o repositório:
 
 ```bash
 git clone https://github.com/seu-usuario/painel_conversas.git
 ```
-# 2. Acesse a pasta do projeto
+### 2. Acesse a pasta do projeto
 ```bashe
 cd painel_conversas
 ```
-# 3. Abra o projeto no Visual Studio, Visual Studio Code ou Rider
+### 3. Abra o projeto no Visual Studio, Visual Studio Code ou Rider
 
-# 4. Atualize a URL da API e o token em ApiService.cs, se necessário:
-# Arquivo: Services/ApiService.cs
+### 4. Atualize a URL da API e o token em ApiService.cs, se necessário:
+### Arquivo: Services/ApiService.cs
 
 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "SEU_TOKEN_AQUI");
 
-# 5. Execute o projeto
-# No Visual Studio: pressione Ctrl + F5
-# Ou via terminal:
+### 5. Execute o projeto
+### No Visual Studio: pressione Ctrl + F5
+### Ou via terminal:
 ```bash
 dotnet run
 ```
