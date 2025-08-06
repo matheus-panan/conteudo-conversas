@@ -1,0 +1,45 @@
+@model List<painel_conversas.Models.Chat>
+
+<h2>Conversas chat</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Texto</th>
+        <th>Origem</th>
+        <th>Remetente</th>
+        <th>Data</th>
+        <th>Tipo</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var chat in Model)
+    {
+        <tr>
+            <td>@chat.Id</td>
+            <td>@chat.Text</td>
+            <td>@chat.Origin</td>
+            <td>@chat.SenderId</td>
+            <td>@DateTimeOffset.FromUnixTimeMilliseconds(chat.CreatedAt).LocalDateTime.ToString("dd/MM/yyyy HH:mm")</td>
+            <td>@chat.Type</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 8px;
+        border: 1px solid #ccc;
+    }
+
+    th {
+        background-color: #f3f3f3;
+    }
+</style>

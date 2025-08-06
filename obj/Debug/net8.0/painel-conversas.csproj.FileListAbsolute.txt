@@ -29,3 +29,4 @@ C:\Users\User\Documents\Painel-conversas\conteudo-conversas\obj\Debug\net8.0\ref
 C:\Users\User\Documents\Painel-conversas\conteudo-conversas\obj\Debug\net8.0\painel-conversas.pdb
 C:\Users\User\Documents\Painel-conversas\conteudo-conversas\obj\Debug\net8.0\painel-conversas.genruntimeconfig.cache
 C:\Users\User\Documents\Painel-conversas\conteudo-conversas\obj\Debug\net8.0\ref\painel-conversas.dll
+C:\Users\User\Documents\Painel-conversas\conteudo-conversas\obj\Debug\net8.0\painel-conversas.sourcelink.json

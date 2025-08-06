@@ -9,6 +9,10 @@
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
+      "Id": "C:\\Users\\User\\Documents\\Painel-conversas\\conteudo-conversas\\wwwroot\\data\\conversas_teste.json",
+      "PackagePath": "staticwebassets\\data\\conversas_teste.json"
+    },
+    {
       "Id": "C:\\Users\\User\\Documents\\Painel-conversas\\conteudo-conversas\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
     },

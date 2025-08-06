@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "6112jGOTe4OWL9VxHqsJdy3tCXlSv+UHWlNqkNyuAoo=",
+  "Hash": "zDo2Nm4xA14+rXCTe0Gu4Js5PdeZmTUkxIuFgY8W6mo=",
   "Source": "painel-conversas",
   "BasePath": "_content/painel-conversas",
   "Mode": "Default",
@@ -72,6 +72,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\site.css"
+    },
+    {
+      "Identity": "C:\\Users\\User\\Documents\\Painel-conversas\\conteudo-conversas\\wwwroot\\data\\conversas_teste.json",
+      "SourceId": "painel-conversas",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\User\\Documents\\Painel-conversas\\conteudo-conversas\\wwwroot\\",
+      "BasePath": "_content/painel-conversas",
+      "RelativePath": "data/conversas_teste.json",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\data\\conversas_teste.json"
     },
     {
       "Identity": "C:\\Users\\User\\Documents\\Painel-conversas\\conteudo-conversas\\wwwroot\\favicon.ico",
