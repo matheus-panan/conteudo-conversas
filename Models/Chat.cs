@@ -3,6 +3,7 @@ namespace painel_conversas.Models;
 public class Chat
 {
     public string Id { get; set; }
+    public string IdChat { get; set; }
     public string Text { get; set; }
     public string Type { get; set; }
     public string Origin { get; set; }
