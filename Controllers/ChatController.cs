@@ -16,5 +16,6 @@ public class ChatController : Controller
     {
         var chats = await apiService.GetChat();
         return View(chats);
+
     }
 }
