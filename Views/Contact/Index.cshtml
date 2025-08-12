@@ -1,41 +1,26 @@
-@model List<painel_conversas.Models.ContactItems>
-<h2>Contatos</h2>
+@model List<string>
 
-<table class="table">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Email</th>
-        <th>Telefone</th>
-    </tr>
-    </thead>
-    <tbody>
+<h2>IDs dos Contatos</h2>
 
-    @foreach (var contact in Model)
-    {
+@if (Model != null && Model.Count > 0)
+{
+    <table class="table table-bordered">
+        <thead>
         <tr>
-            <td>@contact.id</td>
-            <td>@contact.name</td>
-            <td>@contact.email</td>
-            <td>@contact.phone</td>
+            <th>ID</th>
         </tr>
-    }
-    </tbody>
-</table> 
-
-<style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    th, td {
-        padding: 8px;
-        border: 1px solid #ccc;
-    }
-
-    th {
-        background-color: #f3f3f3;
-    }
-</style>
+        </thead>
+        <tbody>
+        @foreach (var id in Model)
+        {
+            <tr>
+                <td>@id</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Nenhum ID encontrado.</p>
+}

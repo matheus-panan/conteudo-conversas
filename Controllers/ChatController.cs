@@ -1,20 +1,20 @@
 namespace painel_conversas.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using painel_conversas.Services;
+//using painel_conversas.Services;
 
 public class ChatController : Controller
 {
-    private readonly ApiService apiService;
+    private readonly ChatService _chatService;
 
-    public ChatController(ApiService apiService)
+    public ChatController(ChatService chatService)
     {
-        this.apiService = apiService;
+        this._chatService = chatService;
     }
 
     public async Task<IActionResult> Index()
     {
-        var chats = await apiService.GetChat();
+        var chats = await _chatService.GetChat();
         return View(chats);
 
     }

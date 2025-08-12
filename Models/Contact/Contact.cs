@@ -2,5 +2,5 @@ namespace painel_conversas.Models;
 
 public class Contact
 {
-    public List<ContactItems> Items;
+    public string items { get; set;}
 }

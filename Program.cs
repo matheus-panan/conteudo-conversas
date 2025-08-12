@@ -1,13 +1,14 @@
-using painel_conversas.Services;
+using painel_conversas;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddHttpClient<ApiService>();
+builder.Services.AddHttpClient<ChatService>();
 builder.Services.AddControllersWithViews();
 
 // Program.cs
-builder.Services.AddHttpClient<ApiService>();
+builder.Services.AddHttpClient<ChatService>();
+builder.Services.AddHttpClient<ContactService>();
 
 var app = builder.Build();
 

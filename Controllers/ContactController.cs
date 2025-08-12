@@ -1,22 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
 using painel_conversas.Models;
-using painel_conversas.Services;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace painel_conversas.Controllers;
-
-public class ContactController : Controller
+namespace painel_conversas.Controllers
 {
-    private readonly ApiService apiService;
-
-    public ContactController(ApiService apiService)
+    public class ContactsController : Controller
     {
-        this.apiService = apiService;
-    }
+        private readonly ContactService _contactsService;
 
-    public async Task<IActionResult> Index()
-    {
-        var contacts = await apiService.GetContact() ?? new List<ContactItems>();
-        return View(contacts);
+        public ContactsController(ContactService contactsService)
+        {
+            _contactsService = contactsService;
+        }
 
+        public async Task<IActionResult> Index()
+        {
+            List<string> ids = await _contactsService.GetContacts();
+            return View(ids);
+        }
     }
 }
