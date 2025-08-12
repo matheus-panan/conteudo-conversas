@@ -1,7 +1,6 @@
 namespace painel_conversas.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-//using painel_conversas.Services;
 
 public class ChatController : Controller
 {
@@ -12,10 +11,20 @@ public class ChatController : Controller
         this._chatService = chatService;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string contactId = null)
     {
-        var chats = await _chatService.GetChat();
-        return View(chats);
-
+        if (string.IsNullOrEmpty(contactId))
+        {
+            // Se não há contactId, busca conversas de todos os contatos
+            var allChats = await _chatService.GetAllChats();
+            return View(allChats);
+        }
+        else
+        {
+            // Se há contactId específico, busca apenas as conversas desse contato
+            var contactChats = await _chatService.GetChatByContact(contactId);
+            ViewData["ContactId"] = contactId;
+            return View(contactChats);
+        }
     }
 }

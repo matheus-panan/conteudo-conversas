@@ -3,12 +3,15 @@ using painel_conversas;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddHttpClient<ChatService>();
 builder.Services.AddControllersWithViews();
 
-// Program.cs
+// Registrar os HttpClients
 builder.Services.AddHttpClient<ChatService>();
 builder.Services.AddHttpClient<ContactService>();
+
+// Registrar os serviços
+builder.Services.AddScoped<ContactService>();
+builder.Services.AddScoped<ChatService>();
 
 var app = builder.Build();
 
@@ -19,7 +22,6 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
