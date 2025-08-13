@@ -45,7 +45,14 @@ namespace painel_conversas
                 if (result == null || result.Data == null)
                     return new List<Chat>();
 
-                return result.Data;
+                // Busca informações do contato para enriquecer as mensagens
+                var contact = await _contactService.GetContactById(contactId);
+                var chats = result.Data;
+
+                // Enriquece cada chat com informações do remetente
+                await EnrichChatsWithSenderInfo(chats, contact);
+
+                return chats;
             }
             catch (Exception ex)
             {
@@ -93,6 +100,31 @@ namespace painel_conversas
             {
                 Console.WriteLine($"Error getting all chats: {ex.Message}");
                 return new List<Chat>();
+            }
+        }
+
+        // Método auxiliar para enriquecer chats com informações do remetente
+        private async Task EnrichChatsWithSenderInfo(List<Chat> chats, ContactItem contact)
+        {
+            foreach (var chat in chats)
+            {
+                // Se o SenderId corresponde ao ID do contato, é o cliente
+                if (contact != null && chat.SenderId == contact.Id)
+                {
+                    chat.SenderName = contact.Name ?? "Cliente";
+                    chat.SenderType = "Cliente";
+                }
+                // Se não, pode ser sistema/bot ou agente
+                else if (chat.Origin == "bot" || chat.Origin == "system")
+                {
+                    chat.SenderName = "Sistema/Bot";
+                    chat.SenderType = "Sistema";
+                }
+                else
+                {
+                    chat.SenderName = "Atendente";
+                    chat.SenderType = "Atendente";
+                }
             }
         }
 

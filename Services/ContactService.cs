@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using painel_conversas.Models;
 using System;
+using System.Linq;
 
 namespace painel_conversas
 {
@@ -50,6 +51,30 @@ namespace painel_conversas
             {
                 Console.WriteLine($"General Error: {ex.Message}");
                 return new List<ContactItem>();
+            }
+        }
+
+        public async Task<ContactItem> GetContactById(string contactId)
+        {
+            try
+            {
+                // Primeiro tenta buscar todos os contatos e encontrar o específico
+                var contacts = await GetContacts();
+                var contact = contacts.FirstOrDefault(c => c.Id == contactId);
+                
+                if (contact != null)
+                {
+                    return contact;
+                }
+
+                // Se não encontrou na lista, tenta buscar diretamente pela API (se houver endpoint específico)
+                Console.WriteLine($"Contact {contactId} not found in contacts list");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting contact by ID {contactId}: {ex.Message}");
+                return null;
             }
         }
     }

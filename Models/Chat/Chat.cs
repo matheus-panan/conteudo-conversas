@@ -11,4 +11,8 @@ public class Chat
     public string ConversationId { get; set; }
     public long CreatedAt { get; set; }
     public object Attachment { get; set; }
+    
+    // Propriedades adicionais para exibir informações do remetente
+    public string SenderName { get; set; }
+    public string SenderType { get; set; } // "Cliente", "Atendente", "Sistema"
 }
