@@ -1,49 +1,77 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - painel_conversas</title>
-    <link rel="stylesheet" href="https://bootswatch.com/5/morph/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/painel_conversas.styles.css" asp-append-version="true"/>
-</head>
-<body>
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Conversas Suri</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-light" asp-area="" asp-controller="Contact" asp-action="Index">Contatos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" asp-area="" asp-controller="Chat" asp-action="Index">Conversas</a>
-                    </li>
-                </ul>
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center d-flex flex-column align-items-center justify-content-center" style="min-height: 70vh;">
+    <h1 class="display-4 fw-bold text-dark mb-4">Bem-vindo ao Painel de Gestão de Conversas!</h1>
+    <p class="lead text-dark-emphasis mb-5">
+        Este painel foi desenvolvido para simplificar a visualização e o gerenciamento de suas interações com clientes.
+        Aqui, você terá acesso rápido a um **relatório detalhado de contatos** e a um **histórico completo de conversas**,
+        permitindo uma análise eficiente e a tomada de decisões estratégicas.
+    </p>
+
+    <div class="row justify-content-center w-100">
+        <div class="col-md-5 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-success">Visão Abrangente de Contatos</h5>
+                    <p class="card-text text-start text-dark">
+                        Explore a lista de todos os seus contatos, com informações essenciais como nome, telefone, e-mail e última atividade.
+                        Identifique rapidamente quem são seus clientes mais engajados e acesse seus perfis para um atendimento personalizado.
+                    </p>
+                    <a href="@Url.Action("Index", "Contact")" class="btn btn-outline-success mt-3">Ver Contatos</a>
+                </div>
             </div>
         </div>
-    </nav>
-</header>
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
+        <div class="col-md-5 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-info">Histórico Detalhado de Conversas</h5>
+                    <p class="card-text text-start text-dark">
+                        Mergulhe nas conversas com seus clientes. Visualize mensagens trocadas, identifique remetentes e tipos de interação.
+                        Com este histórico, você pode acompanhar o fluxo de comunicação e entender melhor as necessidades de cada cliente.
+                    </p>
+                    <a href="@Url.Action("Index", "Chat")" class="btn btn-outline-info mt-3">Ver Conversas</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="mt-5 text-dark">
+        Nosso objetivo é fornecer as ferramentas necessárias para que você tenha total controle sobre suas interações,
+        otimizando o relacionamento com seus clientes e impulsionando o sucesso do seu negócio.
+    </p>
 </div>
 
-@*<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2025 - painel_conversas - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-    </div>
-</footer>*@
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)
-</body>
-</html>
+<style>
+    .display-4 {
+        font-size: 3.5rem;
+    }
+    .lead {
+        font-size: 1.25rem;
+    }
+    .card {
+        border-radius: 0.75rem;
+        border: none;
+    }
+    .card-title {
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+    .btn-outline-success {
+        border-color: #28a745;
+        color: #28a745;
+    }
+    .btn-outline-success:hover {
+        background-color: #28a745;
+        color: #fff;
+    }
+    .btn-outline-info {
+        border-color: #17a2b8;
+        color: #17a2b8;
+    }
+    .btn-outline-info:hover {
+        background-color: #17a2b8;
+        color: #fff;
+    }
+</style>

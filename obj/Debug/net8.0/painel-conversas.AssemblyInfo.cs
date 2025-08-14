@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("painel-conversas")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+86cbd43c862532a78a157d7d7c7d711f2171854e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+081c5f27b159f510d77456fa615d29318965f945")]
 [assembly: System.Reflection.AssemblyProductAttribute("painel-conversas")]
 [assembly: System.Reflection.AssemblyTitleAttribute("painel-conversas")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
