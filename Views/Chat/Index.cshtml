@@ -10,7 +10,7 @@
         @if (isFiltered)
         {
             <span>Conversas do Contato</span>
-            <small class="text-muted">(@contactId)</small>
+            @*<small class="text-muted">(@Contact)</small>*@
         }
         else
         {
@@ -21,7 +21,7 @@
     <div>
         @if (isFiltered)
         {
-            <a href="@Url.Action("Index", "Chat")" class="btn btn-secondary">Ver Todas as Conversas</a>
+            <a href="@Url.Action("Index", "Chat")" class="btn btn-outline-primary">Ver Todas as Conversas</a>
         }
         <a href="@Url.Action("Index", "Contact")" class="btn btn-outline-primary">Voltar aos Contatos</a>
     </div>
@@ -37,7 +37,6 @@
                 <th>Remetente</th>
                 <th>Texto</th>
                 <th>Tipo</th>
-                <th>Origem</th>
             </tr>
             </thead>
             <tbody>
@@ -61,10 +60,10 @@
                                     @chat.SenderName
                                 </span>
                                 <br>
-                                <small class="badge @(chat.SenderType == "Cliente" ? "bg-primary" :
+                                @*<small class="badge @(chat.SenderType == "Cliente" ? "bg-primary" :
                                                     chat.SenderType == "Atendente" ? "bg-success" : "bg-secondary")">
                                     @chat.SenderType
-                                </small>
+                                </small>*@
                             }
                             else
                             {
@@ -89,7 +88,6 @@
                             @chat.Type
                         </span>
                     </td>
-                    <td>@chat.Origin</td>
                 </tr>
             }
             </tbody>
@@ -136,18 +134,18 @@ else
         </p>
 
         <hr>
-        <div class="mb-0">
-            <a href="@Url.Action("Index", "Contacts")" class="btn btn-primary">Ver Lista de Contatos</a>
+        <div class="d-flex gap-2 mb-0">
+            <a href="@Url.Action("Index", "Contact")" class="btn btn-primary">Ver Lista de Contatos</a>
             @if (isFiltered)
             {
-                <a href="@Url.Action("Index", "Chat")" class="btn btn-outline-secondary ms-2">Ver Todas as Conversas</a>
+                <a href="@Url.Action("Index", "Chat")" class="btn btn-outline-secondary">Ver Todas as Conversas</a>
             }
         </div>
     </div>
 }
 
 <style>
-    .table {
+    /*.table {
         margin-top: 20px;
     }
 
@@ -159,7 +157,7 @@ else
 
     .btn-sm {
         padding: 0.25rem 0.5rem;
-        font-size: 0.875rem;
+        font-size: 0.5rem;
     }
 
     .message-text {
@@ -180,7 +178,7 @@ else
         border-radius: 0.375rem;
     }
 
-    /* Estilos para diferentes tipos de remetente */
+     Estilos para diferentes tipos de remetente 
     .sender-cliente {
         color: #0d6efd;
         font-weight: 600;
@@ -194,5 +192,5 @@ else
     .sender-sistema {
         color: #6c757d;
         font-weight: 600;
-    }
+    }*/
 </style>
