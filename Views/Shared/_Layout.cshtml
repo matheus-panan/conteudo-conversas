@@ -1,77 +1,508 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Painel SURI</title>
 
-<div class="text-center d-flex flex-column align-items-center justify-content-center" style="min-height: 70vh;">
-    <h1 class="display-4 fw-bold text-dark mb-4">Bem-vindo ao Painel de Gestão de Conversas!</h1>
-    <p class="lead text-dark-emphasis mb-5">
-        Este painel foi desenvolvido para simplificar a visualização e o gerenciamento de suas interações com clientes.
-        Aqui, você terá acesso rápido a um **relatório detalhado de contatos** e a um **histórico completo de conversas**,
-        permitindo uma análise eficiente e a tomada de decisões estratégicas.
-    </p>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
 
-    <div class="row justify-content-center w-100">
-        <div class="col-md-5 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h5 class="card-title text-success">Visão Abrangente de Contatos</h5>
-                    <p class="card-text text-start text-dark">
-                        Explore a lista de todos os seus contatos, com informações essenciais como nome, telefone, e-mail e última atividade.
-                        Identifique rapidamente quem são seus clientes mais engajados e acesse seus perfis para um atendimento personalizado.
-                    </p>
-                    <a href="@Url.Action("Index", "Contact")" class="btn btn-outline-success mt-3">Ver Contatos</a>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        /* Navbar Styles */
+        .navbar-custom {
+            background: linear-gradient(135deg, #4f46e5 0%, #667eea 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: white !important;
+            text-decoration: none;
+        }
+
+        .navbar-brand:hover {
+            color: #f59e0b !important;
+            transform: scale(1.02);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            padding: 0.75rem 1.25rem !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin: 0 0.25rem;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .navbar-toggler {
+            border: none;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: white;
+            min-height: calc(100vh - 88px);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            border-right: 1px solid #e2e8f0;
+            padding: 0;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f1f5f9;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #334155;
+            margin: 0;
+        }
+
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+
+        .sidebar-item {
+            margin: 0.25rem 1rem;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1rem;
+            color: #475569;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .sidebar-link:hover {
+            background-color: #f1f5f9;
+            color: #4f46e5;
+            transform: translateX(4px);
+        }
+
+        .sidebar-link.active {
+            background: linear-gradient(135deg, #4f46e5 0%, #667eea 100%);
+            color: white;
+        }
+
+        .sidebar-link i {
+            width: 20px;
+            margin-right: 0.75rem;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            background-color: #f8fafc;
+            min-height: calc(100vh - 88px);
+            padding: 0;
+        }
+
+        .content-header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 0;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .page-subtitle {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-top: 0.25rem;
+        }
+
+        .content-body {
+            padding: 2rem;
+        }
+
+        /* Cards */
+        .card-modern {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .card-modern:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Breadcrumb */
+        .breadcrumb-modern {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            font-size: 0.875rem;
+        }
+
+        .breadcrumb-modern .breadcrumb-item {
+            color: #64748b;
+        }
+
+        .breadcrumb-modern .breadcrumb-item.active {
+            color: #334155;
+            font-weight: 500;
+        }
+
+        .breadcrumb-modern .breadcrumb-item + .breadcrumb-item::before {
+            content: "→";
+            color: #94a3b8;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1e293b;
+            color: #cbd5e1;
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+
+        .footer-text {
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        /* Utility Classes */
+        .text-primary-custom {
+            color: #4f46e5 !important;
+        }
+
+        .bg-primary-custom {
+            background-color: #4f46e5 !important;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #4f46e5 0%, #667eea 100%);
+            border: none;
+            color: white;
+            font-weight: 500;
+            padding: 0.625rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            color: white;
+        }
+
+        /* Loading Spinner */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 9999;
+            display: none;
+        }
+
+        .loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+
+<body>
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            <i class="fas fa-robot me-2"></i>
+            Painel SURI
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">
+                        <i class="fas fa-home me-1"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Contact">
+                        <i class="fas fa-users me-1"></i>
+                        Contatos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Chat">
+                        <i class="fas fa-comments me-1"></i>
+                        Conversas
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle me-1"></i>
+                        Usuário
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Perfil</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 col-xl-2 p-0">
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <h6 class="sidebar-title">Menu Principal</h6>
                 </div>
+                <nav class="sidebar-menu">
+                    <div class="sidebar-item">
+                        <a href="/" class="sidebar-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                    </div>
+                    <div class="sidebar-item">
+                        <a href="/Contact" class="sidebar-link">
+                            <i class="fas fa-address-book"></i>
+                            Gestão de Contatos
+                        </a>
+                    </div>
+                    <div class="sidebar-item">
+                        <a href="/Chat" class="sidebar-link">
+                            <i class="fas fa-message"></i>
+                            Histórico de Conversas
+                        </a>
+                    </div>
+                    <div class="sidebar-item">
+                        <a href="#" class="sidebar-link">
+                            <i class="fas fa-chart-bar"></i>
+                            Relatórios
+                        </a>
+                    </div>
+                    <div class="sidebar-item">
+                        <a href="#" class="sidebar-link">
+                            <i class="fas fa-brain"></i>
+                            Treinamento IA
+                        </a>
+                    </div>
+                    <div class="sidebar-item">
+                        <a href="#" class="sidebar-link">
+                            <i class="fas fa-cog"></i>
+                            Configurações
+                        </a>
+                    </div>
+                </nav>
             </div>
         </div>
-        <div class="col-md-5 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h5 class="card-title text-info">Histórico Detalhado de Conversas</h5>
-                    <p class="card-text text-start text-dark">
-                        Mergulhe nas conversas com seus clientes. Visualize mensagens trocadas, identifique remetentes e tipos de interação.
-                        Com este histórico, você pode acompanhar o fluxo de comunicação e entender melhor as necessidades de cada cliente.
-                    </p>
-                    <a href="@Url.Action("Index", "Chat")" class="btn btn-outline-info mt-3">Ver Conversas</a>
+
+        <!-- Main Content -->
+        <div class="col-lg-9 col-xl-10 p-0">
+            <div class="main-content">
+                <!-- Content Header -->
+                <div class="content-header">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h1 class="page-title">@ViewData["Title"]</h1>
+                            @if (ViewData["Subtitle"] != null)
+                            {
+                                <p class="page-subtitle">@ViewData["Subtitle"]</p>
+                            }
+                        </div>
+                        <div>
+                            <nav class="breadcrumb-modern">
+                                @if (ViewData["Breadcrumb"] != null)
+                                {
+                                    @Html.Raw(ViewData["Breadcrumb"])
+                                }
+                                else
+                                {
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item">
+                                            <a href="/">Dashboard</a>
+                                        </li>
+                                        <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                                    </ol>
+                                }
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Body -->
+                <div class="content-body">
+                    <main role="main">
+                        @RenderBody()
+                    </main>
                 </div>
             </div>
         </div>
     </div>
-
-    <p class="mt-5 text-dark">
-        Nosso objetivo é fornecer as ferramentas necessárias para que você tenha total controle sobre suas interações,
-        otimizando o relacionamento com seus clientes e impulsionando o sucesso do seu negócio.
-    </p>
 </div>
 
-<style>
-    .display-4 {
-        font-size: 3.5rem;
-    }
-    .lead {
-        font-size: 1.25rem;
-    }
-    .card {
-        border-radius: 0.75rem;
-        border: none;
-    }
-    .card-title {
-        font-weight: bold;
-        margin-bottom: 1rem;
-    }
-    .btn-outline-success {
-        border-color: #28a745;
-        color: #28a745;
-    }
-    .btn-outline-success:hover {
-        background-color: #28a745;
-        color: #fff;
-    }
-    .btn-outline-info {
-        border-color: #17a2b8;
-        color: #17a2b8;
-    }
-    .btn-outline-info:hover {
-        background-color: #17a2b8;
-        color: #fff;
-    }
-</style>
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <p class="footer-text">
+                    <i class="fas fa-robot me-2"></i>
+                    &copy; @DateTime.Now.Year - Painel SURI - Sistema de Inteligência Artificial
+                </p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="footer-text">
+                    <i class="fas fa-code me-2"></i>
+                    Desenvolvido com <i class="fas fa-heart text-danger mx-1"></i> para otimizar sua gestão
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Sidebar toggle for mobile
+    document.addEventListener('DOMContentLoaded', function() {
+        // Active link highlight
+        const currentPath = window.location.pathname;
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+        // Highlight active sidebar link
+        sidebarLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            }
+        });
+
+        // Highlight active navbar link
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            }
+        });
+
+        // Loading overlay functions
+        window.showLoading = function() {
+            document.getElementById('loadingOverlay').style.display = 'block';
+        };
+
+        window.hideLoading = function() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        };
+
+        // Auto-hide loading after page load
+        setTimeout(() => {
+            if (typeof hideLoading === 'function') {
+                hideLoading();
+            }
+        }, 500);
+    });
+
+    // Enhanced form validation styling
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            if (forms) {
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        } else {
+                            if (typeof showLoading === 'function') {
+                                showLoading();
+                            }
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }
+        }, false);
+    })();
+</script>
+
+@RenderSection("Scripts", required: false)
+</body>
+</html>
