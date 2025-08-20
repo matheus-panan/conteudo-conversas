@@ -1,31 +1,342 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model painel_conversas.Models.Account.LoginViewModel
 
-<h2>Login</h2>
+@{
+    ViewData["Title"] = "Login";
+    Layout = null; // Remove o layout padrão para ter tela completa
+}
 
-<form asp-action="Login" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
-    
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Painel SURI</title>
 
-    <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <div class="form-group">
-        <div class="checkbox">
-            <label asp-for="RememberMe">
-                <input asp-for="RememberMe" />
-                @Html.DisplayNameFor(m => m.RememberMe)
-            </label>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+            min-height: 500px;
+        }
+
+        .login-info {
+            background: linear-gradient(135deg, #4f46e5 0%, #667eea 100%);
+            color: white;
+            padding: 3rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="%23ffffff08" points="0,1000 1000,0 1000,1000"/></svg>');
+        }
+
+        .login-info-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .login-form {
+            padding: 3rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .brand-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .login-subtitle {
+            color: #6b7280;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-floating {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #4f46e5 0%, #667eea 100%);
+            border: none;
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+            color: white;
+        }
+
+        .register-link {
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .register-link a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            color: #3730a3;
+        }
+
+        .alert {
+            border-radius: 12px;
+            border: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            margin-right: 0.5rem;
+            transform: scale(1.2);
+        }
+
+        @*@media (max-width: 768px) {*@
+        .login-container {
+            flex-direction: column;
+            margin: 10px;
+        }
+
+        .login-info {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .brand-title {
+            font-size: 2rem;
+        }
+
+        .login-form {
+            padding: 2rem;
+        }
+        
+    </style>
+</head>
+
+<body>
+<div class="login-container">
+    <!-- Lado esquerdo - Informações -->
+    <div class="login-info">
+        <div class="login-info-content">
+            <div class="text-center mb-4">
+                <i class="fas fa-robot" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                <h1 class="brand-title">Painel SURI</h1>
+                <p class="brand-subtitle">
+                    Sistema inteligente de gestão de conversas com chatbot
+                </p>
+            </div>
+
+            <div class="features">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <strong>Gestão de Contatos</strong><br>
+                        <small>Organize e monitore seus clientes</small>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div>
+                        <strong>Histórico Completo</strong><br>
+                        <small>Visualize todas as conversas</small>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <strong>Analytics Avançado</strong><br>
+                        <small>Métricas e insights em tempo real</small>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Entrar</button>
-</form>
+    <!-- Lado direito - Formulário -->
+    <div class="login-form">
+        <div>
+            <h2 class="login-title">Bem-vindo!</h2>
+            <p class="login-subtitle">Entre com sua conta para continuar</p>
+
+            <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+
+            <form asp-action="Login" method="post" class="needs-validation" novalidate>
+                <input type="hidden" asp-for="ReturnUrl" />
+
+                <div class="form-floating">
+                    <input asp-for="Email" type="email" class="form-control" placeholder="seu@email.com" required>
+                    <label asp-for="Email">
+                        <i class="fas fa-envelope me-2"></i>Email
+                    </label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating">
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Senha" required>
+                    <label asp-for="Password">
+                        <i class="fas fa-lock me-2"></i>Senha
+                    </label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="checkbox-container">
+                    <input asp-for="RememberMe" type="checkbox" class="form-check-input">
+                    <label asp-for="RememberMe" class="form-check-label">
+                        Manter-me conectado
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-login">
+                    <i class="fas fa-sign-in-alt me-2"></i>
+                    Entrar
+                </button>
+
+                <div class="register-link">
+                    Não tem uma conta?
+                    <a href="@Url.Action("Register", "Account")">Registre-se aqui</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Form validation
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+
+    // Auto focus no primeiro campo
+    document.addEventListener('DOMContentLoaded', function() {
+        const emailInput = document.querySelector('input[type="email"]');
+        if (emailInput) {
+            emailInput.focus();
+        }
+    });
+</script>
+</body>
+</html>

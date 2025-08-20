@@ -1,28 +1,377 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model painel_conversas.Models.Account.RegisterViewModel
 
-<h2>Registro</h2>
+@{
+    ViewData["Title"] = "Registro";
+    Layout = null; // Remove o layout padrão para ter tela completa
+}
 
-<form asp-action="Register" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
-    
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Painel SURI</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+            min-height: 600px;
+        }
+
+        .register-info {
+            background: linear-gradient(135deg, #4f46e5 0%, #667eea 100%);
+            color: white;
+            padding: 3rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="%23ffffff08" points="0,1000 1000,0 1000,1000"/></svg>');
+        }
+
+        .register-info-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .register-form {
+            padding: 3rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .brand-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem 0;
+        }
+
+        .benefit-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .register-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .register-subtitle {
+            color: #6b7280;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-floating {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn-register {
+            background: linear-gradient(135deg, #4f46e5 0%, #667eea 100%);
+            border: none;
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+            color: white;
+        }
+
+        .login-link {
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .login-link a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            color: #3730a3;
+        }
+
+        .alert {
+            border-radius: 12px;
+            border: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .password-requirements {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .password-requirements h6 {
+            color: #334155;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .password-requirements ul {
+            margin: 0;
+            padding-left: 1.25rem;
+        }
+
+        @*@media (max-width: 768px) {*@
+        .register-container {
+            flex-direction: column;
+            margin: 10px;
+        }
+
+        .register-info {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .brand-title {
+            font-size: 2rem;
+        }
+
+        .register-form {
+            padding: 2rem;
+        }
+        
+    </style>
+</head>
+
+<body>
+<div class="register-container">
+    <!-- Lado esquerdo - Informações -->
+    <div class="register-info">
+        <div class="register-info-content">
+            <div class="text-center mb-4">
+                <i class="fas fa-robot" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                <h1 class="brand-title">Painel SURI</h1>
+                <p class="brand-subtitle">
+                    Junte-se à plataforma mais avançada de gestão de conversas com IA
+                </p>
+            </div>
+
+            <div class="benefits">
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div>
+                        <strong>Setup Instantâneo</strong><br>
+                        <small>Comece a usar em segundos</small>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div>
+                        <strong>100% Seguro</strong><br>
+                        <small>Seus dados sempre protegidos</small>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div>
+                        <strong>Suporte 24/7</strong><br>
+                        <small>Estamos aqui para ajudar</small>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
+    <!-- Lado direito - Formulário -->
+    <div class="register-form">
+        <div>
+            <h2 class="register-title">Criar Conta</h2>
+            <p class="register-subtitle">Preencha os dados para começar</p>
 
-    <div class="form-group">
-        <label asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" type="password" class="form-control" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
+            <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
 
-    <button type="submit" class="btn btn-primary">Registrar</button>
-</form>
+            <form asp-action="Register" method="post" class="needs-validation" novalidate>
+
+                <div class="form-floating">
+                    <input asp-for="Email" type="email" class="form-control" placeholder="seu@email.com" required>
+                    <label asp-for="Email">
+                        <i class="fas fa-envelope me-2"></i>Email
+                    </label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="password-requirements">
+                    <h6><i class="fas fa-info-circle me-2"></i>Requisitos da senha:</h6>
+                    <ul>
+                        <li>Pelo menos 6 caracteres</li>
+                        <li>Conter pelo menos 1 número</li>
+                        <li>Conter pelo menos 1 letra minúscula</li>
+                    </ul>
+                </div>
+
+                <div class="form-floating">
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Senha" required>
+                    <label asp-for="Password">
+                        <i class="fas fa-lock me-2"></i>Senha
+                    </label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating">
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirmar Senha" required>
+                    <label asp-for="ConfirmPassword">
+                        <i class="fas fa-lock me-2"></i>Confirmar Senha
+                    </label>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-register">
+                    <i class="fas fa-user-plus me-2"></i>
+                    Criar Conta
+                </button>
+
+                <div class="login-link">
+                    Já tem uma conta?
+                    <a href="@Url.Action("Login", "Account")">Fazer login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Form validation
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+
+    // Auto focus no primeiro campo
+    document.addEventListener('DOMContentLoaded', function() {
+        const emailInput = document.querySelector('input[type="email"]');
+        if (emailInput) {
+            emailInput.focus();
+        }
+    });
+
+    // Password confirmation validation
+    const password = document.getElementById('Password');
+    const confirmPassword = document.getElementById('ConfirmPassword');
+
+    function validatePassword() {
+        if (password.value !== confirmPassword.value) {
+            confirmPassword.setCustomValidity('As senhas não coincidem');
+        } else {
+            confirmPassword.setCustomValidity('');
+        }
+    }
+
+    if (password && confirmPassword) {
+        password.onchange = validatePassword;
+        confirmPassword.onkeyup = validatePassword;
+    }
+</script>
+</body>
+</html>
