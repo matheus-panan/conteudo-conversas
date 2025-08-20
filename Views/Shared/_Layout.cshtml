@@ -284,7 +284,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
+        @*<div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="/">
@@ -295,7 +295,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/Contact">
                         <i class="fas fa-users me-1"></i>
-                        Contatos
+                        Clientes
                     </a>
                 </li>
                 <li class="nav-item">
@@ -320,29 +320,29 @@
                     </ul>
                 </li>
             </ul>
-        </div>
+        </div>*@
     </div>
 </nav>
 
 <div class="container-fluid">
     <div class="row">
-        <!-- Sidebar -->
+        
         <div class="col-lg-3 col-xl-2 p-0">
             <div class="sidebar" id="sidebar">
-                <div class="sidebar-header">
+                @*<div class="sidebar-header">
                     <h6 class="sidebar-title">Menu Principal</h6>
-                </div>
+                </div>*@
                 <nav class="sidebar-menu">
                     <div class="sidebar-item">
                         <a href="/" class="sidebar-link">
                             <i class="fas fa-tachometer-alt"></i>
-                            Dashboard
+                            Página Inicial
                         </a>
                     </div>
                     <div class="sidebar-item">
                         <a href="/Contact" class="sidebar-link">
                             <i class="fas fa-address-book"></i>
-                            Gestão de Contatos
+                            Clientes
                         </a>
                     </div>
                     <div class="sidebar-item">
@@ -351,7 +351,7 @@
                             Histórico de Conversas
                         </a>
                     </div>
-                    <div class="sidebar-item">
+                    @*<div class="sidebar-item">
                         <a href="#" class="sidebar-link">
                             <i class="fas fa-chart-bar"></i>
                             Relatórios
@@ -368,25 +368,23 @@
                             <i class="fas fa-cog"></i>
                             Configurações
                         </a>
-                    </div>
+                    </div>*@
                 </nav>
             </div>
         </div>
 
-        <!-- Main Content -->
         <div class="col-lg-9 col-xl-10 p-0">
             <div class="main-content">
-                <!-- Content Header -->
                 <div class="content-header">
                     <div class="d-flex justify-content-between align-items-start">
-                        <div>
+                        @*<div>
                             <h1 class="page-title">@ViewData["Title"]</h1>
                             @if (ViewData["Subtitle"] != null)
                             {
                                 <p class="page-subtitle">@ViewData["Subtitle"]</p>
                             }
-                        </div>
-                        <div>
+                        </div>*@
+                        @*<div>
                             <nav class="breadcrumb-modern">
                                 @if (ViewData["Breadcrumb"] != null)
                                 {
@@ -402,11 +400,10 @@
                                     </ol>
                                 }
                             </nav>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
-
-                <!-- Content Body -->
+                
                 <div class="content-body">
                     <main role="main">
                         @RenderBody()
