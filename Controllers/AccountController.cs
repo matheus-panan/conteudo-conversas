@@ -28,8 +28,14 @@ public class AccountController : Controller
             return RedirectToAction("Index", "Home");
         }
         
+        // Normalizar returnUrl - se for null ou vazio, usar Home
+        if (string.IsNullOrEmpty(returnUrl) || returnUrl == "/")
+        {
+            returnUrl = Url.Action("Index", "Home");
+        }
+        
         ViewData["ReturnUrl"] = returnUrl;
-        return View();
+        return View(new LoginViewModel { ReturnUrl = returnUrl });
     }
 
     // POST: /Account/Login
@@ -38,7 +44,16 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
     {
-        returnUrl = returnUrl ?? Url.Content("~/Home");
+        // Normalizar returnUrl
+        if (string.IsNullOrEmpty(returnUrl))
+        {
+            returnUrl = model.ReturnUrl;
+        }
+        
+        if (string.IsNullOrEmpty(returnUrl) || returnUrl == "/")
+        {
+            returnUrl = Url.Action("Index", "Home");
+        }
 
         if (ModelState.IsValid)
         {
@@ -50,7 +65,15 @@ public class AccountController : Controller
 
             if (result.Succeeded)
             {
-                return LocalRedirect(returnUrl);
+                // Usar LocalRedirect apenas se a URL for local, caso contrário usar redirecionamento seguro
+                if (Url.IsLocalUrl(returnUrl))
+                {
+                    return LocalRedirect(returnUrl);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
             if (result.RequiresTwoFactor)
             {
@@ -63,11 +86,18 @@ public class AccountController : Controller
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Tentativa de login inválida.");
+                ModelState.AddModelError(string.Empty, "Email ou senha incorretos.");
+                
+                // Manter o returnUrl no modelo para preservar na view
+                model.ReturnUrl = returnUrl;
+                ViewData["ReturnUrl"] = returnUrl;
                 return View(model);
             }
         }
 
+        // Se chegou aqui, há erros de validação
+        model.ReturnUrl = returnUrl;
+        ViewData["ReturnUrl"] = returnUrl;
         return View(model);
     }
 
@@ -81,8 +111,14 @@ public class AccountController : Controller
             return RedirectToAction("Index", "Home");
         }
         
+        // Normalizar returnUrl
+        if (string.IsNullOrEmpty(returnUrl) || returnUrl == "/")
+        {
+            returnUrl = Url.Action("Index", "Home");
+        }
+        
         ViewData["ReturnUrl"] = returnUrl;
-        return View();
+        return View(new RegisterViewModel());
     }
 
     // POST: /Account/Register
@@ -91,17 +127,37 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
     {
-        returnUrl = returnUrl ?? Url.Content("~/Home");
+        // Normalizar returnUrl
+        if (string.IsNullOrEmpty(returnUrl) || returnUrl == "/")
+        {
+            returnUrl = Url.Action("Index", "Home");
+        }
 
         if (ModelState.IsValid)
         {
-            var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+            var user = new IdentityUser 
+            { 
+                UserName = model.Email, 
+                Email = model.Email,
+                EmailConfirmed = true // Para evitar problemas de confirmação
+            };
+            
             var result = await _userManager.CreateAsync(user, model.Password);
             
             if (result.Succeeded)
             {
+                // Fazer login automático após registro
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return LocalRedirect(returnUrl);
+                
+                // Redirecionar para a URL especificada ou para Home
+                if (Url.IsLocalUrl(returnUrl))
+                {
+                    return LocalRedirect(returnUrl);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
             
             foreach (var error in result.Errors)
@@ -109,6 +165,8 @@ public class AccountController : Controller
                 ModelState.AddModelError(string.Empty, error.Description);
             }
         }
+        
+        ViewData["ReturnUrl"] = returnUrl;
         return View(model);
     }
 
