@@ -235,39 +235,7 @@
                     Junte-se à plataforma mais avançada de gestão de conversas com IA
                 </p>
             </div>
-
-            <div class="benefits">
-                <div class="benefit-item">
-                    <div class="benefit-icon">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <div>
-                        <strong>Setup Instantâneo</strong><br>
-                        <small>Comece a usar em segundos</small>
-                    </div>
-                </div>
-
-                <div class="benefit-item">
-                    <div class="benefit-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <div>
-                        <strong>100% Seguro</strong><br>
-                        <small>Seus dados sempre protegidos</small>
-                    </div>
-                </div>
-
-                <div class="benefit-item">
-                    <div class="benefit-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                    <div>
-                        <strong>Suporte 24/7</strong><br>
-                        <small>Estamos aqui para ajudar</small>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </div>   
     </div>
 
     <!-- Lado direito - Formulário -->
@@ -276,7 +244,10 @@
             <h2 class="register-title">Criar Conta</h2>
             <p class="register-subtitle">Preencha os dados para começar</p>
 
-            <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+            @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+            {
+                <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+            }
 
             <form asp-action="Register" method="post" class="needs-validation" novalidate>
 
