@@ -5,7 +5,7 @@ using painel_conversas.Models;
 
 namespace painel_conversas.Controllers;
 
-[Authorize] // Garante que todas as ações precisam de autenticação
+[Authorize] 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
@@ -20,12 +20,7 @@ public class HomeController : Controller
         // Se o usuário não estiver autenticado, será redirecionado para login automaticamente
         return View();
     }
-
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
+    
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     [AllowAnonymous] // Página de erro pode ser acessada sem login
     public IActionResult Error()

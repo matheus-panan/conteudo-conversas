@@ -30,20 +30,20 @@
 @if (Model != null && Model.Count > 0)
 {
     <div class="table-responsive">
-        <table class="table table-striped table-hover">
+        <table class="table table-striped table-hover chat-table">
             <thead class="table-dark">
             <tr>
-                <th>Data/Hora</th>
-                <th>Remetente</th>
-                <th>Texto</th>
-                <th>Tipo</th>
+                <th class="col-datetime">Data/Hora</th>
+                <th class="col-sender">Remetente</th>
+                <th class="col-message">Texto</th>
+                <th class="col-type">Tipo</th>
             </tr>
             </thead>
             <tbody>
             @foreach (var chat in Model)
             {
                 <tr>
-                    <td>
+                    <td class="datetime-cell">
                         <div class="fw-bold">
                             @DateTimeOffset.FromUnixTimeMilliseconds(chat.CreatedAt).LocalDateTime.ToString("dd/MM/yyyy")
                         </div>
@@ -51,31 +51,26 @@
                             @DateTimeOffset.FromUnixTimeMilliseconds(chat.CreatedAt).LocalDateTime.ToString("HH:mm:ss")
                         </small>
                     </td>
-                    <td>
+                    <td class="sender-cell">
                         <div>
                             @if (!string.IsNullOrEmpty(chat.SenderName))
                             {
-                                <span class="fw-bold @(chat.SenderType == "Cliente" ? "sender-cliente" :
-                                                     chat.SenderType == "Atendente" ? "sender-atendente" : "sender-sistema")">
+                                <span class="fw-bold sender-name @(chat.SenderType == "Cliente" ? "sender-cliente" :
+                                                                 chat.SenderType == "Atendente" ? "sender-atendente" : "sender-sistema")">
                                     @chat.SenderName
                                 </span>
-                                <br>
-                                @*<small class="badge @(chat.SenderType == "Cliente" ? "bg-primary" :
-                                                    chat.SenderType == "Atendente" ? "bg-success" : "bg-secondary")">
-                                    @chat.SenderType
-                                </small>*@
                             }
                             else
                             {
-                                <span class="badge bg-info">@chat.SenderId</span>
+                                <span class="badge bg-info sender-id">@chat.SenderId</span>
                             }
                         </div>
                     </td>
-                    <td>
+                    <td class="message-cell">
                         <div class="message-text">
                             @if (!string.IsNullOrEmpty(chat.Text))
                             {
-                                <span>@chat.Text</span>
+                                <span class="message-content">@chat.Text</span>
                             }
                             else
                             {
@@ -83,8 +78,8 @@
                             }
                         </div>
                     </td>
-                    <td>
-                        <span class="badge @(chat.Type == "incoming" ? "bg-success" : "bg-primary")">
+                    <td class="type-cell">
+                        <span class="badge chat-type-badge @(chat.Type == "incoming" ? "bg-success" : "bg-primary")">
                             @chat.Type
                         </span>
                     </td>
@@ -145,40 +140,95 @@ else
 }
 
 <style>
-    /*.table {
+    /* Configuração da tabela para evitar scroll horizontal */
+    .chat-table {
+        table-layout: fixed;
+        width: 100%;
         margin-top: 20px;
     }
 
-    .table th {
+    /* Larguras fixas para colunas */
+    .col-datetime {
+        width: 15%;
+        min-width: 120px;
+    }
+
+    .col-sender {
+        width: 20%;
+        min-width: 150px;
+    }
+
+    .col-message {
+        width: 50%;
+        min-width: 200px;
+    }
+
+    .col-type {
+        width: 15%;
+        min-width: 100px;
+    }
+
+    /* Células com quebra de texto */
+    .datetime-cell,
+    .sender-cell,
+    .message-cell,
+    .type-cell {
+        word-wrap: break-word;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+        vertical-align: top;
+        padding: 12px 8px;
+    }
+
+    /* Estilo específico para mensagens */
+    .message-text {
+        max-width: 100%;
+        line-height: 1.4;
+    }
+
+    .message-content {
+        display: block;
+        max-height: 120px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        word-break: break-word;
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+
+    /* Estilo para nomes de remetentes */
+    .sender-name {
+        display: block;
+        font-size: 0.9rem;
+        line-height: 1.3;
+    }
+
+    .sender-id {
+        font-size: 0.8rem;
+        max-width: 100%;
+        word-break: break-all;
+    }
+
+    /* Headers da tabela */
+    .chat-table th {
         background-color: #343a40;
         color: white;
         border-color: #454d55;
+        font-weight: 600;
+        text-align: center;
+        vertical-align: middle;
+        padding: 15px 8px;
     }
 
-    .btn-sm {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.5rem;
-    }
-
-    .message-text {
-        max-width: 300px;
-        word-wrap: break-word;
-    }
-
-    .badge {
+    /* Badges responsivos */
+    .chat-type-badge {
         font-size: 0.75em;
+        padding: 0.35em 0.65em;
+        white-space: nowrap;
     }
 
-    .table-responsive {
-        border-radius: 0.375rem;
-        overflow: hidden;
-    }
-
-    .alert {
-        border-radius: 0.375rem;
-    }
-
-     Estilos para diferentes tipos de remetente 
+    /* Estilos para diferentes tipos de remetente */
     .sender-cliente {
         color: #0d6efd;
         font-weight: 600;
@@ -192,5 +242,58 @@ else
     .sender-sistema {
         color: #6c757d;
         font-weight: 600;
-    }*/
+    }
+
+    /* Container da tabela */
+    .table-responsive {
+        border-radius: 0.375rem;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 1rem;
+    }
+
+    /* Linhas da tabela */
+    .chat-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .chat-table tbody tr {
+        transition: background-color 0.2s ease;
+    }
+
+    /* Alertas */
+    .alert {
+        border-radius: 0.375rem;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Botões */
+    .btn-outline-primary,
+    .btn-primary,
+    .btn-outline-secondary {
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    /* Scrollbar customizada para mensagens longas */
+    .message-content::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .message-content::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 2px;
+    }
+
+    .message-content::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 2px;
+    }
+
+    .message-content::-webkit-scrollbar-thumb:hover {
+        background: #a1a1a1;
+    }
 </style>
