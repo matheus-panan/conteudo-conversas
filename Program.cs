@@ -45,6 +45,8 @@ builder.Services.AddControllersWithViews();
 // Registrar os HttpClients
 builder.Services.AddHttpClient<ChatService>();
 builder.Services.AddHttpClient<ContactService>();
+builder.Services.AddScoped<painel_conversas.Services.Export.JsonService>();
+builder.Services.AddScoped<painel_conversas.Services.Export.CSVService>();
 
 // Registrar os serviços
 builder.Services.AddScoped<ContactService>();

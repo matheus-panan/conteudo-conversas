@@ -5,12 +5,12 @@
     var isFiltered = !string.IsNullOrEmpty(contactId);
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+    <h2 class="mb-0">
         @if (isFiltered)
         {
             <span>Conversas do Contato</span>
-            @*<small class="text-muted">(@Contact)</small>*@
+            <small class="text-muted d-block d-md-inline">(@contactId)</small>
         }
         else
         {
@@ -18,14 +18,52 @@
         }
     </h2>
 
-    <div>
-        @if (isFiltered)
+    <div class="header-actions mt-2 mt-md-0">
+        @if (Model != null && Model.Count > 0)
         {
-            <a href="@Url.Action("Index", "Chat")" class="btn btn-outline-primary">Ver Todas as Conversas</a>
+            <div class="btn-group me-2 mb-2 mb-md-0" role="group" aria-label="Exportar dados">
+                <a href="@Url.Action("ExportJson", "Chat", new { contactId = contactId })"
+                   class="btn btn-outline-success btn-sm">
+                    <i class="fas fa-download d-inline d-md-none"></i>
+                    <span class="d-none d-md-inline"><i class="fas fa-download"></i> Exportar JSON</span>
+                    <span class="d-inline d-md-none">JSON</span>
+                </a>
+                <a href="@Url.Action("ExportCsv", "Chat", new { contactId = contactId })"
+                   class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-file-csv d-inline d-md-none"></i>
+                    <span class="d-none d-md-inline"><i class="fas fa-file-csv"></i> Exportar CSV</span>
+                    <span class="d-inline d-md-none">CSV</span>
+                </a>
+            </div>
         }
-        <a href="@Url.Action("Index", "Contact")" class="btn btn-outline-primary">Voltar aos Contatos</a>
+
+        <div class="btn-group" role="group" aria-label="Navegação">
+            @if (isFiltered)
+            {
+                <a href="@Url.Action("Index", "Chat")" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-list d-inline d-md-none"></i>
+                    <span class="d-none d-lg-inline"><i class="fas fa-list"></i> Ver Todas as Conversas</span>
+                    <span class="d-inline d-lg-none d-none d-md-inline">Todas</span>
+                    <span class="d-inline d-md-none">Lista</span>
+                </a>
+            }
+            <a href="@Url.Action("Index", "Contact")" class="btn btn-outline-info btn-sm">
+                <i class="fas fa-users d-inline d-md-none"></i>
+                <span class="d-none d-lg-inline"><i class="fas fa-users"></i> Voltar aos Contatos</span>
+                <span class="d-inline d-lg-none d-none d-md-inline">Contatos</span>
+                <span class="d-inline d-md-none">Voltar</span>
+            </a>
+        </div>
     </div>
 </div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
 @if (Model != null && Model.Count > 0)
 {
@@ -89,20 +127,25 @@
         </table>
     </div>
 
-    <div class="mt-3">
-        <p class="text-muted">
-            Total de mensagens: @Model.Count
+    <div class="mt-3 d-flex justify-content-between align-items-center flex-wrap">
+        <p class="text-muted mb-0">
+            Total de mensagens: <strong>@Model.Count</strong>
             @if (isFiltered)
             {
-                <span> | Contato: @contactId</span>
+                <span class="d-block d-md-inline"> | Contato: <strong>@contactId</strong></span>
             }
         </p>
+        <div class="export-info text-muted small d-none d-lg-flex align-items-center mt-2 mt-lg-0">
+            <i class="fas fa-info-circle me-1"></i>
+            Use os botões de exportação para baixar os dados em formato JSON ou CSV
+        </div>
     </div>
 }
 else
 {
     <div class="alert alert-info" role="alert">
         <h4 class="alert-heading">
+            <i class="fas fa-info-circle"></i>
             @if (isFiltered)
             {
                 <span>Nenhuma conversa encontrada para este contato</span>
@@ -129,17 +172,32 @@ else
         </p>
 
         <hr>
-        <div class="d-flex gap-2 mb-0">
-            <a href="@Url.Action("Index", "Contact")" class="btn btn-primary">Ver Lista de Contatos</a>
+        <div class="d-flex gap-2 mb-0 flex-wrap">
+            <a href="@Url.Action("Index", "Contact")" class="btn btn-primary mb-2">
+                <i class="fas fa-users"></i> Ver Lista de Contatos
+            </a>
             @if (isFiltered)
             {
-                <a href="@Url.Action("Index", "Chat")" class="btn btn-outline-secondary">Ver Todas as Conversas</a>
+                <a href="@Url.Action("Index", "Chat")" class="btn btn-outline-secondary mb-2">
+                    <i class="fas fa-list"></i> Ver Todas as Conversas
+                </a>
             }
+            <button type="button" class="btn btn-outline-primary mb-2" onclick="location.reload()">
+                <i class="fas fa-refresh"></i> Atualizar
+            </button>
         </div>
     </div>
 }
 
 <style>
+    /* Header Actions */
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
     /* Configuração da tabela para evitar scroll horizontal */
     .chat-table {
         table-layout: fixed;
@@ -244,6 +302,47 @@ else
         font-weight: 600;
     }
 
+    /* Botões de exportação */
+    .btn-group .btn {
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-group .btn:first-child {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .btn-group .btn:last-child {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .btn-outline-success:hover {
+        background-color: #198754;
+        border-color: #198754;
+        transform: translateY(-1px);
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        transform: translateY(-1px);
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        transform: translateY(-1px);
+    }
+
+    .btn-outline-info:hover {
+        background-color: #0dcaf0;
+        border-color: #0dcaf0;
+        transform: translateY(-1px);
+    }
+
     /* Container da tabela */
     .table-responsive {
         border-radius: 0.375rem;
@@ -268,14 +367,11 @@ else
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    /* Botões */
-    .btn-outline-primary,
-    .btn-primary,
-    .btn-outline-secondary {
-        border-radius: 8px;
-        font-weight: 500;
-        padding: 0.5rem 1rem;
-        transition: all 0.3s ease;
+    /* Informações de exportação */
+    .export-info {
+        display: flex;
+        align-items: center;
+        gap: 5px;
     }
 
     /* Scrollbar customizada para mensagens longas */
@@ -296,4 +392,12 @@ else
     .message-content::-webkit-scrollbar-thumb:hover {
         background: #a1a1a1;
     }
+
+    /* Ajustes para telas menores usando flexbox */
+    .btn-group {
+        flex: 0 0 auto;
+    }
 </style>
+
+<!-- FontAwesome para os ícones -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
