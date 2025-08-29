@@ -1,11 +1,13 @@
+// Controllers/ChatController.cs - OTIMIZADO
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using painel_conversas.Models.Pagination;
 using painel_conversas.Services.Export;
 using System.Threading.Tasks;
 
 namespace painel_conversas.Controllers;
 
-[Authorize] // Requer autenticação para todas as ações
+[Authorize]
 public class ChatController : Controller
 {
     private readonly ChatService _chatService;
@@ -19,32 +21,91 @@ public class ChatController : Controller
         _csvService = csvService;
     }
 
-    public async Task<IActionResult> Index(string contactId = null)
+    public async Task<IActionResult> Index(string contactId = null, int page = 1, int pageSize = 50)
     {
         try
         {
+            // Validar parâmetros
+            if (page < 1) page = 1;
+            if (pageSize < 10) pageSize = 10;
+            if (pageSize > 100) pageSize = 100;
+
+            PagedResult<painel_conversas.Models.Chat> pagedChats;
+            
             if (string.IsNullOrEmpty(contactId))
             {
-                // Se não há contactId, busca conversas de todos os contatos
-                var allChats = await _chatService.GetAllChats();
-                return View(allChats);
+                // **OTIMIZAÇÃO CRÍTICA**: Usar método otimizado para todas as conversas
+                pagedChats = await _chatService.GetAllChatsOptimized(page, pageSize, maxContacts: 15);
+                
+                // Adicionar aviso sobre limitação
+                if (page == 1)
+                {
+                    TempData["Info"] = "Para melhor performance, exibindo conversas dos primeiros 15 contatos. Use filtros específicos para ver mais.";
+                }
             }
             else
             {
-                // Se há contactId específico, busca apenas as conversas desse contato
-                var contactChats = await _chatService.GetChatByContact(contactId);
+                // Para contato específico, usar método paginado
+                pagedChats = await _chatService.GetChatByContactPaged(contactId, page, pageSize);
                 ViewData["ContactId"] = contactId;
-                return View(contactChats);
             }
+
+            // Configurar ViewData para paginação
+            ViewData["Pagination"] = new PaginationViewModel
+            {
+                CurrentPage = pagedChats.CurrentPage,
+                TotalPages = pagedChats.TotalPages,
+                HasPreviousPage = pagedChats.HasPreviousPage,
+                HasNextPage = pagedChats.HasNextPage,
+                TotalItems = pagedChats.TotalItems,
+                StartItem = pagedChats.StartItem,
+                EndItem = pagedChats.EndItem,
+                PageSize = pagedChats.PageSize,
+                Action = "Index",
+                Controller = "Chat",
+                RouteValues = string.IsNullOrEmpty(contactId) ? null : new { contactId = contactId }
+            };
+
+            ViewData["CurrentPageSize"] = pageSize;
+            
+            return View(pagedChats);
         }
         catch (Exception ex)
         {
-            // Log do erro
             Console.WriteLine($"Erro ao carregar chats: {ex.Message}");
             
-            // Retorna uma view com lista vazia em caso de erro
             ViewData["Error"] = "Erro ao carregar as conversas. Tente novamente.";
-            return View(new List<painel_conversas.Models.Chat>());
+            
+            var emptyResult = new PagedResult<painel_conversas.Models.Chat>
+            {
+                Items = new List<painel_conversas.Models.Chat>(),
+                CurrentPage = 1,
+                TotalPages = 0,
+                PageSize = pageSize,
+                TotalItems = 0
+            };
+            
+            ViewData["Pagination"] = new PaginationViewModel
+            {
+                CurrentPage = 1,
+                TotalPages = 0,
+                HasPreviousPage = false,
+                HasNextPage = false,
+                TotalItems = 0,
+                StartItem = 0,
+                EndItem = 0,
+                PageSize = pageSize,
+                Action = "Index",
+                Controller = "Chat",
+                RouteValues = string.IsNullOrEmpty(contactId) ? null : new { contactId = contactId }
+            };
+            
+            if (!string.IsNullOrEmpty(contactId))
+            {
+                ViewData["ContactId"] = contactId;
+            }
+            
+            return View(emptyResult);
         }
     }
 
@@ -58,7 +119,9 @@ public class ChatController : Controller
 
             if (string.IsNullOrEmpty(contactId))
             {
-                chats = await _chatService.GetAllChats();
+                // Para exportação completa, usar método otimizado com mais contatos
+                var pagedResult = await _chatService.GetAllChatsOptimized(1, 5000, maxContacts: 50);
+                chats = pagedResult.Items;
                 fileName = $"conversas_todas_{DateTime.Now:yyyyMMdd_HHmmss}.json";
             }
             else
@@ -88,7 +151,8 @@ public class ChatController : Controller
 
             if (string.IsNullOrEmpty(contactId))
             {
-                chats = await _chatService.GetAllChats();
+                var pagedResult = await _chatService.GetAllChatsOptimized(1, 5000, maxContacts: 50);
+                chats = pagedResult.Items;
                 fileName = $"conversas_todas_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
             }
             else

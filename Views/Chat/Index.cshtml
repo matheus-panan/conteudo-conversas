@@ -1,8 +1,10 @@
-@model List<painel_conversas.Models.Chat>
+@model painel_conversas.Models.Pagination.PagedResult<painel_conversas.Models.Chat>
 
 @{
     var contactId = ViewData["ContactId"] as string;
     var isFiltered = !string.IsNullOrEmpty(contactId);
+    var pagination = ViewData["Pagination"] as painel_conversas.Models.Pagination.PaginationViewModel;
+    var currentPageSize = ViewData["CurrentPageSize"] as int? ?? 50;
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
@@ -19,7 +21,7 @@
     </h2>
 
     <div class="header-actions mt-2 mt-md-0">
-        @if (Model != null && Model.Count > 0)
+        @if (Model != null && Model.TotalItems > 0)
         {
             <div class="btn-group me-2 mb-2 mb-md-0" role="group" aria-label="Exportar dados">
                 <a href="@Url.Action("ExportJson", "Chat", new { contactId = contactId })"
@@ -65,8 +67,54 @@
     </div>
 }
 
-@if (Model != null && Model.Count > 0)
+<!-- Filtros e controles de página -->
+@if (Model != null && Model.TotalItems > 0)
 {
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <form method="get" class="d-flex align-items-center">
+                <label class="me-2 text-nowrap">Itens por página:</label>
+                <select name="pageSize" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
+                    @{
+                        var pageSizeOptions = new[] { 25, 50, 75, 100 };
+                    }
+                    @foreach (var option in pageSizeOptions)
+                    {
+                        <option value="@option" selected="@(currentPageSize == option)">@option</option>
+                    }
+                </select>
+                <input type="hidden" name="page" value="1" />
+                @if (isFiltered)
+                {
+                    <input type="hidden" name="contactId" value="@contactId" />
+                }
+            </form>
+        </div>
+        <div class="col-md-6 text-md-end mt-2 mt-md-0">
+            <small class="text-muted">
+                <i class="fas fa-info-circle me-1"></i>
+                Total de <strong>@Model.TotalItems</strong> mensagens
+                @if (isFiltered)
+                {
+                    <span class="d-block d-md-inline"> do contato <strong>@contactId</strong></span>
+                }
+            </small>
+        </div>
+    </div>
+}
+
+@if (Model != null && Model.Items.Count > 0)
+{
+    <!-- Indicador de carregamento -->
+    <div id="loadingIndicator" class="text-center py-3" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+        <div class="mt-2">
+            <small class="text-muted">Carregando conversas...</small>
+        </div>
+    </div>
+
     <div class="table-responsive">
         <table class="table table-striped table-hover chat-table">
             <thead class="table-dark">
@@ -78,7 +126,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach (var chat in Model)
+            @foreach (var chat in Model.Items)
             {
                 <tr>
                     <td class="datetime-cell">
@@ -127,18 +175,9 @@
         </table>
     </div>
 
-    <div class="mt-3 d-flex justify-content-between align-items-center flex-wrap">
-        <p class="text-muted mb-0">
-            Total de mensagens: <strong>@Model.Count</strong>
-            @if (isFiltered)
-            {
-                <span class="d-block d-md-inline"> | Contato: <strong>@contactId</strong></span>
-            }
-        </p>
-        <div class="export-info text-muted small d-none d-lg-flex align-items-center mt-2 mt-lg-0">
-            <i class="fas fa-info-circle me-1"></i>
-            Use os botões de exportação para baixar os dados em formato JSON ou CSV
-        </div>
+    <!-- Paginação -->
+    <div class="mt-4">
+        @Html.Partial("_PaginationPartial", pagination)
     </div>
 }
 else
@@ -367,13 +406,6 @@ else
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    /* Informações de exportação */
-    .export-info {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
     /* Scrollbar customizada para mensagens longas */
     .message-content::-webkit-scrollbar {
         width: 4px;
@@ -397,7 +429,45 @@ else
     .btn-group {
         flex: 0 0 auto;
     }
+
+    /* Loading indicator */
+    #loadingIndicator {
+        background-color: rgba(248, 249, 250, 0.9);
+        border-radius: 0.375rem;
+    }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mostrar indicador de carregamento ao navegar entre páginas
+        const paginationLinks = document.querySelectorAll('.pagination .page-link');
+        const pageSizeSelect = document.querySelector('select[name="pageSize"]');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+
+        function showLoading() {
+            if (loadingIndicator) {
+                loadingIndicator.style.display = 'block';
+                document.querySelector('.table-responsive').style.opacity = '0.5';
+            }
+        }
+
+        // Adicionar evento aos links de paginação
+        paginationLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (!this.closest('.page-item').classList.contains('disabled')) {
+                    showLoading();
+                }
+            });
+        });
+
+        // Adicionar evento ao seletor de itens por página
+        if (pageSizeSelect) {
+            pageSizeSelect.addEventListener('change', function() {
+                showLoading();
+            });
+        }
+    });
+</script>
 
 <!-- FontAwesome para os ícones -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
